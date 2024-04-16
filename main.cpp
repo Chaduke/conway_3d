@@ -2,8 +2,8 @@
 #include "sgd/sgd.h"
 using namespace std;
 
-constexpr int gridCols = 50; // x value
-constexpr int gridRows = 50; // y value
+constexpr int gridCols = 128; // x value
+constexpr int gridRows = 72; // y value
 constexpr float cellSize = 1;
 
 SGD_Bool grid[gridCols][gridRows]; // store the main displayed grid
@@ -28,22 +28,28 @@ static void resetCamera() {
 }
 
 static void resetCamera1() {
-	sgd_SetEntityPosition(pivot, 0, gridCols * 1.33, -gridCols / 20);
+	sgd_SetEntityPosition(pivot, 0, gridCols * .82, -gridRows / 20);
 	sgd_SetEntityRotation(pivot, 0, 0, 0);
 	sgd_SetEntityRotation(cam, -88, 0, 0);
 }
 
 static void resetCamera2() {
-	sgd_SetEntityPosition(pivot, 0, 37, -gridCols * 1.6);
+	sgd_SetEntityPosition(pivot, 0, 50, -gridRows);
 	sgd_SetEntityRotation(pivot, 0, 0, 0);
-	sgd_SetEntityRotation(cam, -22, 0, 0);
+	sgd_SetEntityRotation(cam, -30, 0, 0);
 }
 
 static void resetCamera3() {
-	sgd_SetEntityPosition(pivot, -gridCols * 1.6, 53, -gridCols * 1.6);
-	sgd_SetEntityRotation(pivot, 0, -47, 0);
-	sgd_SetEntityRotation(cam, -20, -47, 0);
+	sgd_SetEntityPosition(pivot, -gridCols -5, 50, -gridRows-5);
+	sgd_SetEntityRotation(pivot, 0, -50, 0);
+	sgd_SetEntityRotation(cam, -20, -50, 0);
 }
+static void resetCamera4() {
+	sgd_SetEntityPosition(pivot,0, 3, -25);
+	sgd_SetEntityRotation(pivot, 0, 0, 0);
+	sgd_SetEntityRotation(cam, -15, 0, 0);
+}
+
 
 static void randomizeGrid() {
 	for (int row = 0; row < gridRows; row++) {
@@ -134,8 +140,8 @@ static void updateNext() {
 
 int main() {
 	sgd_Startup();
-	sgd_CreateWindow(1280, 720, "Conway's Game of Life in 3D", 0); // 16 : 9 Window
-	// sgd_CreateWindow(3840,2160, "", 1); // UHD Fullscreen
+	// sgd_CreateWindow(1280, 720, "Conway's Game of Life in 3D", 0); // 16 : 9 Window
+	sgd_CreateWindow(3840,2160, "", 1); // UHD Fullscreen
 	// sgd_CreateWindow(1920, 1080, "", 1); // HD Fullscreen
 	sgd_SetWebGPUBackend("D3D11");
 	sgd_CreateScene();
@@ -158,7 +164,7 @@ int main() {
 	sgd_SetEntityParent(cam, pivot);
 	sgd_SetEntityParent(cursorModel, pivot);
 	sgd_MoveEntity(pivot, 0, 7, -20);
-	sgd_MoveEntity(cursorModel, 0, 5, 0);
+	sgd_MoveEntity(cursorModel, 0, -4.5, -5);
 	SGD_Light p1 = sgd_CreatePointLight();
 	sgd_SetLightRange(p1, 200);
 	sgd_MoveEntity(p1, 0, 50, 0);
@@ -167,14 +173,14 @@ int main() {
 	// create a background for shadows	
 	SGD_Material backgroundMaterial = sgd_LoadPBRMaterial("assets/Planks037B_1K-JPG");
 	SGD_Model backgroundModel = sgd_CreateModel();
-	float bx = floor((gridCols / 2) + (gridCols / 10));
-	float by = floor((gridRows / 2) + (gridRows / 10));
-	SGD_Mesh backgroundMesh = sgd_CreateBoxMesh(-bx, -6, -by, bx, -5, by, backgroundMaterial);
+	float bx = floor((gridCols / 2) + (gridCols / 15));
+	float by = floor((gridRows / 2) + (gridRows / 15));
+	SGD_Mesh backgroundMesh = sgd_CreateBoxMesh(-bx, -3, -by, bx, -2, by, backgroundMaterial);
 	sgd_TransformMeshTexCoords(backgroundMesh, 16, 16, 0, 0);
 	sgd_SetModelMesh(backgroundModel, backgroundMesh);
 	
 	// create the cell mesh
-	SGD_Material sphereMaterial = sgd_LoadPBRMaterial("sgd://materials/Fabric048_1K-JPG");
+	SGD_Material sphereMaterial = sgd_LoadPBRMaterial("assets/Snow010A_1K-JPG");
 	SGD_Mesh sphereMesh = sgd_CreateSphereMesh(0.5, 16, 16, sphereMaterial);
 	sgd_SetMeshCastsShadow(sphereMesh, SGD_TRUE);	
 	
@@ -209,10 +215,10 @@ int main() {
 	SGD_Bool editmode = SGD_FALSE;
 	SGD_Bool mouselook = SGD_FALSE; // enable / disable mouselook
 	SGD_Bool mousesmooth = SGD_TRUE; // enable mouse smoothing	  
-	SGD_Bool paused = SGD_FALSE;
+	SGD_Bool paused = SGD_TRUE;
 	SGD_Bool loop = SGD_TRUE; // flag to stay in main loop or exit
 
-	resetCamera1(); // switch to top down view 
+	resetCamera4(); // switch to top down view 
 	// start main loop
 	while (loop) {
 		int e = sgd_PollEvents();
@@ -233,6 +239,8 @@ int main() {
 		if (sgd_KeyHit(SGD_KEY_2)) resetCamera2();
 		// reset the camera low and back corner
 		if (sgd_KeyHit(SGD_KEY_3)) resetCamera3();
+		// reset the camera low 
+		if (sgd_KeyHit(SGD_KEY_4)) resetCamera4();
 
 		// report camera location and rotation to the console
 		if (sgd_KeyHit(SGD_KEY_R)) reportCamera();
@@ -250,7 +258,7 @@ int main() {
 		if (sgd_KeyHit(SGD_KEY_F2)) {
 			if (editmode) {
 				editmode = SGD_FALSE;
-				sgd_MoveEntity(cursorModel, 0, 9.5, -10);
+				sgd_MoveEntity(cursorModel, 0, 0, -15);
 			}
 			else {
 				editmode = SGD_TRUE;
@@ -258,7 +266,7 @@ int main() {
 				sgd_SetEntityPosition(pivot, floor(sgd_EntityX(pivot)), 5, floor(sgd_EntityZ(pivot)));
 				sgd_SetEntityRotation(pivot, 0, 0, 0);
 				sgd_SetEntityRotation(cam, -25,0, 0);
-				sgd_MoveEntity(cursorModel, 0, -9.5, 10);
+				sgd_MoveEntity(cursorModel, 0, 0, 15);
 			}
 		}
 		if (!editmode) {
