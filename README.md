@@ -8,5 +8,6 @@ Instructions:
 4) open conway_3d.sln
 5) hit F5
 
+Video here - https://youtu.be/Ux4fZRMXW0E?si=1gHzymVNplpfYIfO
 
 
