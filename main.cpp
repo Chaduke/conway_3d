@@ -141,8 +141,8 @@ static void updateNext() {
 int main() {
 	sgd_Startup();
 	// sgd_CreateWindow(1280, 720, "Conway's Game of Life in 3D", 0); // 16 : 9 Window
-	sgd_CreateWindow(3840,2160, "", 1); // UHD Fullscreen
-	// sgd_CreateWindow(1920, 1080, "", 1); // HD Fullscreen
+	// sgd_CreateWindow(3840,2160, "", 1); // UHD Fullscreen
+	sgd_CreateWindow(1920, 1080, "", 1); // HD Fullscreen
 	sgd_SetWebGPUBackend("D3D11");
 	sgd_CreateScene();
 	SGD_Texture skyTexture = sgd_LoadTexture("sgd://envmaps/nightsky-cube.png", 2, SGD_TEXTURE_FLAGS_CUBE);
@@ -152,6 +152,13 @@ int main() {
 	sgd_SetSkyboxRoughness(skybox, .25f);
 	cam = sgd_CreatePerspectiveCamera();
 	sgd_SetCameraFar(cam, 1000);
+	// create a label F1 for Help
+	SGD_Model f1_for_help = sgd_LoadModel("assets/f1_for_help.glb");
+	SGD_Model help_menu = sgd_LoadModel("assets/help_menu.glb");
+	sgd_SetEntityParent(f1_for_help, cam);
+	sgd_SetEntityParent(help_menu, cam);
+	sgd_MoveEntity(f1_for_help, -0.68, 0.4, 1);
+	sgd_MoveEntity(help_menu, -0.4, 0.2, 0);
 	pivot = sgd_CreateModel();
 	SGD_Material cursorMaterial = sgd_LoadPBRMaterial("assets/DiamondPlate008C_1K-JPG");
 	SGD_Mesh cursorMesh = sgd_CreateSphereMesh(0.5, 16, 16, cursorMaterial);
@@ -169,6 +176,10 @@ int main() {
 	sgd_SetLightRange(p1, 200);
 	sgd_MoveEntity(p1, 0, 50, 0);
 	sgd_SetLightCastsShadow(p1, SGD_TRUE);
+	SGD_Light camLight = sgd_CreatePointLight();
+	sgd_SetLightRange(camLight,1.5);
+	sgd_SetEntityParent(camLight, cam);
+	sgd_MoveEntity(camLight, -0.5, 0, 0);
 	
 	// create a background for shadows	
 	SGD_Material backgroundMaterial = sgd_LoadPBRMaterial("assets/Planks037B_1K-JPG");
@@ -216,6 +227,7 @@ int main() {
 	SGD_Bool mouselook = SGD_FALSE; // enable / disable mouselook
 	SGD_Bool mousesmooth = SGD_TRUE; // enable mouse smoothing	  
 	SGD_Bool paused = SGD_TRUE;
+	SGD_Bool showhelp = SGD_FALSE;
 	SGD_Bool loop = SGD_TRUE; // flag to stay in main loop or exit
 
 	resetCamera4(); // switch to top down view 
@@ -253,7 +265,20 @@ int main() {
 		if (sgd_KeyHit(SGD_KEY_N)) {
 			if(paused) updateNext();
 		}
-
+		// toggle show help 
+		// toggle edit mode
+		if (sgd_KeyHit(SGD_KEY_F1)) {
+			if (showhelp) {
+				showhelp = SGD_FALSE;
+				sgd_MoveEntity(f1_for_help, 0, 0, 1);
+				sgd_MoveEntity(help_menu, 0, 0, -1);
+			}
+			else {
+				showhelp = SGD_TRUE;
+				sgd_MoveEntity(f1_for_help, 0, 0, -1);
+				sgd_MoveEntity(help_menu, 0, 0, 1);
+			}
+		}
 		// toggle edit mode
 		if (sgd_KeyHit(SGD_KEY_F2)) {
 			if (editmode) {
