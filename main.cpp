@@ -1,3 +1,21 @@
+// Conway's Game of Life in 3D
+// by Chad Dore'
+// chaduke@gmail.com
+// youtube.com/chaddore
+// github.com/chaduke
+// made with LibSGD
+// support it and get it at 
+// patreon.com/libsgd
+// materials from ambientcg.com
+// if you questions comments or 
+// requests or do anything cool
+// with this let me know or 
+// comment on youtube
+// thanks for checking this out
+// TODO : make a full XYZ 3D style grid
+// TODO : improve the edit mode
+// TODO : add ability to load / save states
+
 #include <iostream>
 #include "sgd/sgd.h"
 using namespace std;
@@ -310,7 +328,7 @@ int main() {
 			if (sgd_KeyDown(SGD_KEY_DOWN)) sgd_TurnEntity(cam, -turnspeed, 0, 0); // turn down
 		}
 		else {
-			// in edit we move in precise units
+			// in edit mode we move in precise units
 			if (sgd_KeyHit(SGD_KEY_W)) sgd_MoveEntity(pivot, 0, 0, 1);  // move forward
 			if (sgd_KeyHit(SGD_KEY_S)) sgd_MoveEntity(pivot, 0, 0, -1); // move forward
 			if (sgd_KeyHit(SGD_KEY_A)) sgd_MoveEntity(pivot, -1, 0, 0); // move left
@@ -320,7 +338,7 @@ int main() {
 			if (sgd_KeyHit(SGD_KEY_ENTER)) {
 				int x = int(gridCols / 2) + floor(sgd_EntityX(cursorModel));
 				int y = int(gridRows / 2) + floor(sgd_EntityZ(cursorModel));
-				cout << "Cursor at | " << x << " " << y << endl;
+				// cout << "Cursor at | " << x << " " << y << endl;
 				if (x>-1 && x<gridCols && y>-1 && y<gridRows) {
 					if (grid[x][y]) grid[x][y]=SGD_FALSE; else grid[x][y]=SGD_TRUE;
 					arrangeGrid();
