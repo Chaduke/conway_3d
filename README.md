@@ -30,4 +30,4 @@ WASDQE - moves one cell at a time \
 Enter toggles cells on/off \
 F3 - Toggle 2D / 3D mode \
 Ctrl + Numpad 0-9 - Save State \
-Numpad 0-9 - Load State \
+Numpad 0-9 - Load State
