@@ -133,7 +133,6 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="camera.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="grid2D.h" />
     <ClInclude Include="grid3D.h" />

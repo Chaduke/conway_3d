@@ -1,10 +1,20 @@
 #pragma once
 
+static void initCamera() {
+	cam = sgd_CreatePerspectiveCamera();
+	sgd_SetCameraFar(cam, 1000);
+	pivot = sgd_CreateModel();
+	sgd_SetEntityParent(cam, pivot);
+}
+	
 
+static void reportCamera() {
+	std::cout << "Camera Location | " << sgd_EntityX(pivot) << " " << sgd_EntityY(pivot) << " " << sgd_EntityZ(pivot) << std::endl;
+	std::cout << "Camera Rotation | " << sgd_EntityRX(cam) << " " << sgd_EntityRY(cam) << " " << sgd_EntityRZ(cam) << std::endl;
+}
 
 void createBackgroundModel() {
-	// create a background / floor for the simulation
-	
+	// create a background / floor for the simulation	
 	backgroundModel = sgd_CreateModel();
 	float bx, by;
 	if (mode2D) {
@@ -63,9 +73,15 @@ void init() {
 	SGD_Light dirLight = sgd_CreateDirectionalLight();
 
 	// middle light
-	SGD_Light midLight = sgd_CreatePointLight();
-	sgd_SetLightRange(midLight, 20);
-	sgd_MoveEntity(midLight, 0, 5, 0);
+	SGD_Light midLight = sgd_CreatePointLight();	
+	if (mode2D) {
+		sgd_MoveEntity(midLight, 0, 50, 0);
+		sgd_SetLightRange(midLight, 100);
+	}
+	else {
+		sgd_MoveEntity(midLight, 0, 5, 0);
+		sgd_SetLightRange(midLight, 25);
+	}
 	sgd_SetLightCastsShadow(midLight, SGD_TRUE);
 
 	// camera light
@@ -80,6 +96,5 @@ void init() {
 	
 	createBackgroundModel();
 	if (mode2D) createGridModels2D(cellMesh); else createGridModels3D(cellMesh);
-	
-	resetCamera4(); // switch to close view
+	readViewState(0);
 }

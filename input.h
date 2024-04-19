@@ -18,16 +18,6 @@ void processInput() {
 	if (sgd_KeyHit(SGD_KEY_C)) {
 		if (mode2D) clearGrid(); else clearGrid3D();
 	}
-	// reset the camera to starting values
-	if (sgd_KeyHit(SGD_KEY_0)) resetCamera();
-	// reset the camera high up 
-	if (sgd_KeyHit(SGD_KEY_1)) resetCamera1(mode2D);
-	// reset the camera midway and back
-	if (sgd_KeyHit(SGD_KEY_2)) resetCamera2();
-	// reset the camera low and back corner
-	if (sgd_KeyHit(SGD_KEY_3)) resetCamera3();
-	// reset the camera low 
-	if (sgd_KeyHit(SGD_KEY_4)) resetCamera4();
 
 	// report camera location and rotation to the console
 	if (sgd_KeyHit(SGD_KEY_R)) reportCamera();
@@ -127,17 +117,29 @@ void processInput() {
 			// cout << "Cursor at | " << x << " " << y << endl;			
 		}
 	}
-	// load and save states 
-	if (sgd_KeyHit(SGD_KEY_KP_0)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeToState(0); else readFromState(0);
-	if (sgd_KeyHit(SGD_KEY_KP_1)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeToState(1); else readFromState(1);
-	if (sgd_KeyHit(SGD_KEY_KP_2)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeToState(2); else readFromState(2);
-	if (sgd_KeyHit(SGD_KEY_KP_3)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeToState(3); else readFromState(3);
-	if (sgd_KeyHit(SGD_KEY_KP_4)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeToState(4); else readFromState(4);
-	if (sgd_KeyHit(SGD_KEY_KP_5)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeToState(5); else readFromState(5);
-	if (sgd_KeyHit(SGD_KEY_KP_6)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeToState(6); else readFromState(6);
-	if (sgd_KeyHit(SGD_KEY_KP_7)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeToState(7); else readFromState(7);
-	if (sgd_KeyHit(SGD_KEY_KP_8)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeToState(8); else readFromState(8);
-	if (sgd_KeyHit(SGD_KEY_KP_9)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeToState(9); else readFromState(9);	
+	// load and save grid states 
+	if (sgd_KeyHit(SGD_KEY_KP_0)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeGridState(0); else readGridState(0);
+	if (sgd_KeyHit(SGD_KEY_KP_1)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeGridState(1); else readGridState(1);
+	if (sgd_KeyHit(SGD_KEY_KP_2)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeGridState(2); else readGridState(2);
+	if (sgd_KeyHit(SGD_KEY_KP_3)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeGridState(3); else readGridState(3);
+	if (sgd_KeyHit(SGD_KEY_KP_4)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeGridState(4); else readGridState(4);
+	if (sgd_KeyHit(SGD_KEY_KP_5)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeGridState(5); else readGridState(5);
+	if (sgd_KeyHit(SGD_KEY_KP_6)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeGridState(6); else readGridState(6);
+	if (sgd_KeyHit(SGD_KEY_KP_7)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeGridState(7); else readGridState(7);
+	if (sgd_KeyHit(SGD_KEY_KP_8)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeGridState(8); else readGridState(8);
+	if (sgd_KeyHit(SGD_KEY_KP_9)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeGridState(9); else readGridState(9);
+
+	// load and save view states 
+	if (sgd_KeyHit(SGD_KEY_0)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeViewState(0); else readViewState(0);
+	if (sgd_KeyHit(SGD_KEY_1)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeViewState(1); else readViewState(1);
+	if (sgd_KeyHit(SGD_KEY_2)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeViewState(2); else readViewState(2);
+	if (sgd_KeyHit(SGD_KEY_3)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeViewState(3); else readViewState(3);
+	if (sgd_KeyHit(SGD_KEY_4)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeViewState(4); else readViewState(4);
+	if (sgd_KeyHit(SGD_KEY_5)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeViewState(5); else readViewState(5);
+	if (sgd_KeyHit(SGD_KEY_6)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeViewState(6); else readViewState(6);
+	if (sgd_KeyHit(SGD_KEY_7)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeViewState(7); else readViewState(7);
+	if (sgd_KeyHit(SGD_KEY_8)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeViewState(8); else readViewState(8);
+	if (sgd_KeyHit(SGD_KEY_9)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeViewState(9); else readViewState(9);
 
 	// toggle mouselook to switch to gamepad		
 	if (sgd_KeyHit(SGD_KEY_M)) {

@@ -26,9 +26,6 @@
     <ClInclude Include="grid3D.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="init.h">
       <Filter>Source Files</Filter>
     </ClInclude>

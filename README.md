@@ -21,7 +21,7 @@ C - Clear all Cells
 SPACE - Reset / Randomize Cells
 M - Toggle Mouselook / Gamepad
 WASD - Move Forward Left Back Right 
-QE - Move Up and  Down
+QE - Move Up and Down
 Left SHIFT - Move at Double Speed
 Arrow Keys - Turn Camera Up Down Left Right
 F2 - Toggle Edit Mode
@@ -29,6 +29,7 @@ In Edit Mode :
 WASDQE - moves one cell at a time
 Enter toggles cells on/off
 F3 - Toggle 2D / 3D mode
-Ctrl + Numpad 0-9 - Save State
-Numpad 0-9 - Load State
-
+Ctrl + Numpad 0-9 - Save Grid State
+Numpad 0-9 - Load Grid State
+Ctrl + Numbers 0-9 - Save View State
+Numbers 0-9 - Load View State

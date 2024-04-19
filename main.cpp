@@ -21,16 +21,15 @@
 #include "globals.h"
 #include "grid2D.h"
 #include "grid3D.h"
-#include "camera.h"
-#include "init.h"
 #include "states.h"
+#include "init.h"
 #include "input.h"
 
 int main() {
 	sgd_Startup();
-	// sgd_CreateWindow(1280, 720, "Conway's Game of Life in 3D", 0); // 16 : 9 Window
+	sgd_CreateWindow(1280, 720, "Conway's Game of Life in 3D", 0); // 16 : 9 Window
 	// sgd_CreateWindow(3840,2160, "", 1); // UHD Fullscreen
-	sgd_CreateWindow(1920, 1080, "", 1); // HD Fullscreen
+	// sgd_CreateWindow(1920, 1080, "", 1); // HD Fullscreen
 	sgd_SetWebGPUBackend("D3D12");
 	sgd_CreateScene();
 	init();
