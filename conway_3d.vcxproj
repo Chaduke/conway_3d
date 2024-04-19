@@ -132,6 +132,18 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="camera.h" />
+    <ClInclude Include="globals.h" />
+    <ClInclude Include="grid2D.h" />
+    <ClInclude Include="grid3D.h" />
+    <ClInclude Include="input.h" />
+    <ClInclude Include="init.h" />
+    <ClInclude Include="states.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
