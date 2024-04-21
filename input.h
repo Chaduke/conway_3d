@@ -1,10 +1,10 @@
 #pragma once
 void processInput() {
 	int e = sgd_PollEvents();
-	if (sgd_KeyDown(SGD_KEY_ESCAPE) || (e == 1)) loop = SGD_FALSE;  // exit program 
+	if (sgd_KeyDown(SGD_KEY_ESCAPE) || (e == 1)) loop = false;  // exit program 
 
 	// reset the grid
-	if (sgd_KeyHit(SGD_KEY_SPACE)) {
+	if (sgd_KeyHit(SGD_KEY_R)) {
 		if (mode2D) {
 			randomizeGrid();
 			arrangeGrid();
@@ -19,39 +19,29 @@ void processInput() {
 		if (mode2D) clearGrid(); else clearGrid3D();
 	}
 
-	// report camera location and rotation to the console
-	if (sgd_KeyHit(SGD_KEY_R)) reportCamera();
-
 	// pause the simulation
-	if (sgd_KeyHit(SGD_KEY_P)) {
-		if (paused) paused = SGD_FALSE; else paused = SGD_TRUE;
+	if (sgd_KeyHit(SGD_KEY_SPACE)) {
+		if (paused) paused = false; else paused = true;
 	}
 	// move forward just one step when paused
 	if (sgd_KeyHit(SGD_KEY_N) && paused) {
 		if (mode2D) updateNextGrid(); else updateNextGrid3D();
-	}
-	// toggle show help 		
-	if (sgd_KeyHit(SGD_KEY_F1)) {
-		if (showhelp) {
-			showhelp = SGD_FALSE;
-			sgd_MoveEntity(f1_for_help, 0, 0, 1);
-			sgd_MoveEntity(help_menu, 0, 0, -1);
-		}
-		else {
-			showhelp = SGD_TRUE;
-			sgd_MoveEntity(f1_for_help, 0, 0, -1);
-			sgd_MoveEntity(help_menu, 0, 0, 1);
-		}
-	}
+	}	
+	// toggle help window
+	if (sgd_KeyHit(SGD_KEY_F1)) if (show_help) show_help=false; else show_help = true;
+
+	// toggle imgui demo window
+	if (sgd_KeyHit(SGD_KEY_F4)) if (show_demo_window) show_demo_window = false; else show_demo_window = true;
+	
 	// toggle edit mode
-	if (sgd_KeyHit(SGD_KEY_F2)) {
+	if (sgd_KeyHit(SGD_KEY_G)) {
 		if (editmode) {
-			editmode = SGD_FALSE;
+			editmode = false;
 			sgd_MoveEntity(cursorModel, 0, 0, -15);			
 		}
 		else {
-			editmode = SGD_TRUE;
-			mouselook = SGD_FALSE;
+			editmode = true;
+			mouselook = false;
 			if (mode2D) {
 				if (sgd_EntityX(pivot) < -gridCols / 2 || sgd_EntityX(pivot) > gridCols / 2 ||
 					sgd_EntityZ(pivot) < -gridRows / 2 || sgd_EntityZ(pivot) > gridCols / 2)
@@ -65,8 +55,8 @@ void processInput() {
 		}
 	}
 	// toggle 2D / 3D mode 
-	if (sgd_KeyHit(SGD_KEY_F3)) {
-		if (mode2D) mode2D = SGD_FALSE; else mode2D = SGD_TRUE;
+	if (sgd_KeyHit(SGD_KEY_T)) {
+		if (mode2D) mode2D = false; else mode2D=true;
 		init();
 	}
 
@@ -101,7 +91,7 @@ void processInput() {
 				int x = int(gridCols / 2) + floor(sgd_EntityX(cursorModel));
 				int y = int(gridRows / 2) + floor(sgd_EntityZ(cursorModel));
 				if (x > -1 && x<gridCols && y>-1 && y < gridRows) {
-					if (grid[x][y]) grid[x][y] = SGD_FALSE; else grid[x][y] = SGD_TRUE;
+					if (grid[x][y]) grid[x][y] = false; else grid[x][y] = true;
 					arrangeGrid();
 				}
 			}
@@ -110,11 +100,10 @@ void processInput() {
 				int y = int(gridRows3 / 2) + floor(sgd_EntityY(cursorModel));
 				int z = int(gridLayers3 / 2) + floor(sgd_EntityZ(cursorModel));
 				if (x > -1 && x<gridCols3 && y>-1 && y < gridRows3 && z>-1 && z < gridLayers3) {
-					if (grid3[x][y][z]) grid3[x][y][z] = SGD_FALSE; else grid3[x][y][z] = SGD_TRUE;
+					if (grid3[x][y][z]) grid3[x][y][z] = false; else grid3[x][y][z] = true;
 					arrangeGrid3D();
 				}
-			}
-			// cout << "Cursor at | " << x << " " << y << endl;			
+			}			
 		}
 	}
 	// load and save grid states 
@@ -142,35 +131,25 @@ void processInput() {
 	if (sgd_KeyHit(SGD_KEY_9)) if (sgd_KeyDown(SGD_KEY_LEFT_CONTROL)) writeViewState(9); else readViewState(9);
 
 	// toggle mouselook to switch to gamepad		
-	if (sgd_KeyHit(SGD_KEY_M)) {
-		if (mouselook) mouselook = SGD_FALSE; else mouselook = SGD_TRUE;
+	if (sgd_KeyHit(SGD_KEY_F)) {
+		if (mouselook) {
+			mouselook = false;
+			sgd_SetMouseCursorMode(1);
+		}
+		else {
+			mouselook = true;
+			sgd_SetMouseCursorMode(3);
+		}
 	}
 	if (mouselook) {
-		lmx = mx; lmy = my; // update last mouse position
-		mx = sgd_MouseX(); my = sgd_MouseY(); // get current mouse position
-
-		// turn off mousesmooth if you prefer choppier mouse movement
-		if (mousesmooth) {
-			_mmx = 0; _mmy = 0;
-			for (int i = 0; i < 4; i++) {
-				mmx[i] = mmx[i + 1]; mmy[i] = mmy[i + 1];
-				_mmx += mmx[i];
-				_mmy += mmy[i];
-			}
-			mmx[4] = (lmx - mx); mmy[4] = (lmy - my);
-			_mmx += mmx[4]; _mmy += mmy[4];
-			_mmx /= 5; _mmy /= 5;
-		}
-		else _mmx = lmx - mx; _mmy = lmy - my; // non smoothed mouse 
-
-		sgd_TurnEntity(pivot, 0, _mmx, 0); // turn the pivot on the y-axis 
-		sgd_TurnEntity(cam, _mmy, 0, 0); // turn the camera on the x axis 
+		sgd_TurnEntity(pivot, 0, -sgd_MouseVX(), 0); // turn the pivot on the y-axis 
+		sgd_TurnEntity(cam, -sgd_MouseVY(), 0, 0); // turn the camera on the x axis 
 
 		float crx = sgd_EntityRX(cam);  // get camera rotation on x axis (pitch)
 		if (crx > 90) crx = 90;  // limit looking up
 		if (crx < -90) crx = -90;  // limit looking down					
 		float cry = sgd_EntityRY(pivot); // get pivot rotation on y axis (yaw)		
-		sgd_SetEntityRotation(cam, crx, cry, 0);  // reset the camera without z rotation (roll)
+		sgd_SetEntityRotation(cam, crx, 0, 0);  // reset the camera without z rotation (roll)
 	}
 	else {
 		// get gamepad input (tested with PS4 controller)

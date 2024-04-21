@@ -1,18 +1,5 @@
 #pragma once
 
-static void initCamera() {
-	cam = sgd_CreatePerspectiveCamera();
-	sgd_SetCameraFar(cam, 1000);
-	pivot = sgd_CreateModel();
-	sgd_SetEntityParent(cam, pivot);
-}
-	
-
-static void reportCamera() {
-	std::cout << "Camera Location | " << sgd_EntityX(pivot) << " " << sgd_EntityY(pivot) << " " << sgd_EntityZ(pivot) << std::endl;
-	std::cout << "Camera Rotation | " << sgd_EntityRX(cam) << " " << sgd_EntityRY(cam) << " " << sgd_EntityRZ(cam) << std::endl;
-}
-
 void createBackgroundModel() {
 	// create a background / floor for the simulation	
 	backgroundModel = sgd_CreateModel();
@@ -33,29 +20,25 @@ void createBackgroundModel() {
 }
 
 void loadAssets() {
-	skyTexture = sgd_LoadTexture("assets/skybox_night.png", 2, SGD_TEXTURE_FLAGS_CUBE);
-	f1_for_help = sgd_LoadModel("assets/f1_for_help.glb");
-	help_menu = sgd_LoadModel("assets/help_menu.glb");
+	skyTexture = sgd_LoadTexture("assets/skybox_night.png", 4, SGD_TEXTURE_FLAGS_CUBE);	
 	cursorMaterial = sgd_LoadPBRMaterial("assets/DiamondPlate008C_1K-JPG");
 	cellMaterial = sgd_LoadPBRMaterial("assets/Snow010A_1K-JPG");
-	backgroundMaterial = sgd_LoadPBRMaterial("assets/Planks037B_1K-JPG");
+	backgroundMaterial = sgd_LoadPBRMaterial("assets/Planks037B_1K-JPG");	
 }
 
 void init() {
 	sgd_ClearScene();
-	if(!assetsloaded) loadAssets();
+	loadAssets();
 	// skybox
 	sgd_SetSceneEnvTexture(skyTexture);
 	SGD_Skybox skybox = sgd_CreateSkybox();
 	sgd_SetSkyboxTexture(skybox, skyTexture);
 	sgd_SetSkyboxRoughness(skybox, .25f);
 
-	initCamera();	
-	// create help menu	
-	sgd_SetEntityParent(f1_for_help, cam);
-	sgd_SetEntityParent(help_menu, cam);
-	sgd_MoveEntity(f1_for_help, -0.335, 0.2, 0.5);
-	sgd_MoveEntity(help_menu, -0.48, 0.15, 0);
+	cam = sgd_CreatePerspectiveCamera();
+	sgd_SetCameraFar(cam, 1000);
+	pivot = sgd_CreateModel();
+	sgd_SetEntityParent(cam, pivot);
 	
 	// create cursor for edit mode	
 	SGD_Mesh cursorMesh = sgd_CreateSphereMesh(0.5, 16, 16, cursorMaterial);

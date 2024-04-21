@@ -1,15 +1,17 @@
 #pragma once
+#define SGD_DYNAMIC 1
 #include "sgd/sgd.h"
 
 // various runtime flags 
-SGD_Bool editmode = SGD_FALSE;
-SGD_Bool mouselook = SGD_FALSE; // enable / disable mouselook
-SGD_Bool mousesmooth = SGD_TRUE; // enable mouse smoothing	  
-SGD_Bool paused = SGD_TRUE;
-SGD_Bool showhelp = SGD_FALSE;
-SGD_Bool loop = SGD_TRUE; // flag to stay in main loop or exit
-SGD_Bool mode2D = SGD_FALSE; // decide early on 2D or full 3D mode
-SGD_Bool assetsloaded = SGD_FALSE;
+bool editmode = false;
+bool mouselook = false; // enable / disable mouselook 
+bool paused = true;
+bool show_demo_window = false; // imgui demo window
+bool show_help = true; // imgui help window
+bool show_stats = true; // imgui stats window
+bool show_rules = true; // imgui rules window
+bool loop = true; // flag to stay in main loop or exit
+bool mode2D = false; // decide early on 2D or full 3D mode
 
 // created assets
 SGD_Model backgroundModel;
@@ -21,16 +23,14 @@ SGD_Texture skyTexture;
 SGD_Material backgroundMaterial;
 SGD_Material cursorMaterial;
 SGD_Material cellMaterial;
-SGD_Model f1_for_help;
-SGD_Model help_menu;
 
 // for 2D mode
 constexpr int gridCols = 128; // x value
 constexpr int gridRows = 72; // y value
 constexpr float cellSize = 1;
 
-SGD_Bool grid[gridCols][gridRows]; // store the main displayed grid
-SGD_Bool nextgrid[gridCols][gridRows]; // store the grid for the following frame
+bool grid[gridCols][gridRows]; // store the main displayed grid
+bool nextgrid[gridCols][gridRows]; // store the grid for the following frame
 SGD_Model cells[gridCols][gridRows]; // store the cell models 
 
 // for 3D mode
@@ -48,14 +48,3 @@ SGD_Model pivot;
 
 float movespeed = 0.3; // camera movement speed
 float turnspeed = 1.0; // camera turn speed
-
-// mouse movement 
-float mx = 0; // for current mouseX 
-float my = 0; // for current mouseY 	
-float lmx = mx; // for last mouseX
-float lmy = my; // for last mouseY
-float mmx[5]; // array to store mouse movement X axis values over 5 frames
-float mmy[5]; // array to store mouse movement Y axis values over 5 frames
-
-float _mmx = 0; // for final mouse movement X value (to update pivot rotation Y-Axis)
-float _mmy = 0; // for final mouse movement Y value (to update camera rotation X-Axis)	

@@ -47,11 +47,13 @@ void readViewState(int state) {
 	file >> s; cz = stof(s);
 	file >> s; crx = stof(s);
 	file >> s; cry = stof(s);
-	file >> s; crz = stof(s);
+	file >> s; crz = stof(s);	
 	sgd_SetEntityPosition(pivot, px, py, pz);
 	sgd_SetEntityRotation(pivot, prx, pry, prz);
-	sgd_SetEntityPosition(cam, cx, cy, cz);
-	sgd_SetEntityRotation(cam, crx, cry, crz);
+	sgd_SetEntityRotation(cam,0, 0,0);
+	sgd_TurnEntity(cam, crx, 0, 0);
+	// sgd_SetEntityPosition(cam, cx, cy, cz);
+	// sgd_SetEntityRotation(cam, crx, cry, crz);
 	cout << "Read from file : " << filename << endl;
 }
 

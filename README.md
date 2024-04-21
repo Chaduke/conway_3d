@@ -14,20 +14,24 @@ Help Menu
 ---------
 
 F1 - Toggle Help Menu \
-0-4 - Change to a preset view \
-P - Pause / Unpause \
+
+0-9 - Load a view state \
+Ctrl + 0-9 - Save a view state \
+Ctrl + Numpad 0-9 - Save a Grid State \
+Numpad 0-9 - Load a Grid State \
+
+SPACE - Pause / Unpause \
 N - Next Frame (while paused) \
 C - Clear all Cells \
-SPACE - Reset / Randomize Cells \
-M - Toggle Mouselook / Gamepad \
+R - Reset / Randomize Cells \
+F - Toggle Mouselook / Gamepad \
 WASD - Move Forward Left Back Right \
 QE - Move Up and Down \
 Left SHIFT - Move at Double Speed \
 Arrow Keys - Turn Camera Up Down Left Right \ 
-F2 - Toggle Edit Mode \
+G - Toggle Edit Mode \
 In Edit Mode : \
 WASDQE - moves one cell at a time \
 Enter toggles cells on/off \
-F3 - Toggle 2D / 3D mode \
-Ctrl + Numpad 0-9 - Save State \
-Numpad 0-9 - Load State
+T - Toggle 2D / 3D mode 
+

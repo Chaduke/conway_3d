@@ -3,6 +3,8 @@
 
 #include "keycodes.h"
 
+#include <stdint.h>
+
 //! @file
 
 //! @mainpage
@@ -58,6 +60,7 @@ typedef const char* SGD_String;
 typedef SGD_Handle SGD_Texture;
 typedef SGD_Handle SGD_Material;
 typedef SGD_Handle SGD_Mesh;
+typedef SGD_Handle SGD_Font;
 typedef SGD_Handle SGD_Entity;
 typedef SGD_Handle SGD_Camera;
 typedef SGD_Handle SGD_Light;
@@ -65,16 +68,22 @@ typedef SGD_Handle SGD_Model;
 typedef SGD_Handle SGD_Sprite;
 typedef SGD_Handle SGD_Skybox;
 
+#if UINTPTR_MAX == 0xffffffffffffffff
+typedef double SGD_Real;
+#else
+typedef float SGD_Real;
+#endif
+
 //! @}
 
 //! @name System
 //! @{
 
 //! Start up libsgd.
-SGD_API void SGD_DECL sgd_Startup();
+SGD_API void SGD_DECL sgd_Init();
 
 //! Shut down libsgd.
-SGD_API void SGD_DECL sgd_Shutdown();
+SGD_API void SGD_DECL sgd_Terminate();
 
 //! Set WebGPU backend: D3D12, D3D11, Vulkan. Must be called before sgd_CreateScene().
 SGD_API void SGD_DECL sgd_SetWebGPUBackend(SGD_String backend);
@@ -87,6 +96,12 @@ SGD_API void SGD_DECL sgd_Error(SGD_String error);
 
 //! Generate modal alert dialog.
 SGD_API void SGD_DECL sgd_Alert(SGD_String message);
+
+//! Return width of desktop in pixels.
+SGD_API int SGD_DECL sgd_DesktopWidth();
+
+//! Return height of desktop in pixels.
+SGD_API int SGD_DECL sgd_DesktopHeight();
 
 //! @cond Event mask  constants returned by sgd_NextEvent.
 #define SGD_EVENT_MASK_CLOSE_CLICKED 1
@@ -111,8 +126,9 @@ SGD_API void SGD_DECL sgd_Alert(SGD_String message);
 //! SGD_EVENT_MASK_RESUMED         | 32            | App resumed
 SGD_API SGD_Bool SGD_DECL sgd_PollEvents();
 
-//! Debug memory state, does nothing in release builds.
+//! @cond Debug memory state, does nothing in release builds.
 SGD_API void SGD_DECL sgd_DebugMemory();
+//! @endcond
 
 //! @}
 
@@ -122,16 +138,18 @@ SGD_API void SGD_DECL sgd_DebugMemory();
 //! @cond Window flags for use with CreateWindow.
 #define SGD_WINDOW_FLAGS_FULLSCREEN 1
 #define SGD_WINDOW_FLAGS_RESIZABLE 2
+#define SGD_WINDOW_FLAGS_RGBA8_60HZ 256
 //! @endcond
 
 //! Create a new window.
 //!
-//! @flags should be one or more of the following bit mask values:
+//! `flags` should be one or more of the following bit mask values:
 //!
 //! Window flag                 | Integer value | Description
 //! ----------------------------|---------------|------------
 //! SGD_WINDOW_FLAGS_FULLSCREEN | 1             | Create a fullscreen window.
 //! SGD_WINDOW_FLAGS_RESIZABLE  | 2             | Create a resizable window.
+//! SGD_WINDOW_FLAGS_RGBA8_60HZ | 256           | Create an exclusive mode fullscreen window.
 SGD_API void SGD_DECL sgd_CreateWindow(int width, int height, SGD_String title, int flags);
 
 //! Destroy window.
@@ -163,11 +181,36 @@ SGD_API float SGD_DECL sgd_MouseX();
 //! Mouse Y position in window coordinates.
 SGD_API float SGD_DECL sgd_MouseY();
 
-//! Mouse scroll X value.
+//! Mouse X velocity in window coordinates.
+SGD_API float SGD_DECL sgd_MouseVX();
+
+//! Mouse Y velocity in window coordinates.
+SGD_API float SGD_DECL sgd_MouseVY();
+
+//! Mouse X scroll value.
 SGD_API float SGD_DECL sgd_MouseScrollX();
 
-//! Mouse scroll Y value.
+//! Mouse Y scroll value.
 SGD_API float SGD_DECL sgd_MouseScrollY();
+
+//! @cond Cursor modes for use with SetMouseCursorMode.
+#define SGD_MOUSE_CURSOR_MODE_NORMAL 1
+#define SGD_MOUSE_CURSOR_MODE_HIDDEN 2
+#define SGD_MOUSE_CURSOR_MODE_DISABLED 3
+#define SGD_MOUSE_CURSOR_MODE_CAPTURED 4
+//! @endcond
+
+//! Set mouse cursor mode.
+//!
+//! @cursorMode should be one or more of the following bit mask values:
+//!
+//! Cursor mode                    | Integer value | Description
+//! -------------------------------|---------------|------------
+//! SGD_MOUSE_CURSOR_MODE_NORMAL   | 1             | Normal mouse cursor behaviour
+//! SGD_MOUSE_CURSOR_MODE_HIDDEN   | 2             | Mouse cursor is hidden
+//! SGD_MOUSE_CURSOR_MODE_DISABLED | 3             | Mouse cursor is hidden and locked to window
+//! SGD_MOUSE_CURSOR_MODE_CAPTURED | 4             | Mouse cursor is locked to window
+SGD_API void SGD_DECL sgd_SetMouseCursorMode(int cursorMode);
 
 //! True if mouse button is curently held down.
 SGD_API SGD_Bool SGD_DECL sgd_MouseButtonDown(int button);
@@ -193,10 +236,12 @@ SGD_API float SGD_DECL sgd_GamepadAxis(int gamepad, int axis);
 //! @{
 
 //! @cond Texture format constants
-#define SGD_TEXTURE_FORMAT_RGBA8 1
-#define SGD_TEXTURE_FORMAT_SRGBA8 2
-#define SGD_TEXTURE_FORMAT_RGBA16F 3
-#define SGD_TEXTURE_FORMAT_DEPTH32F 4
+#define SGD_TEXTURE_FORMAT_R8 1
+#define SGD_TEXTURE_FORMAT_RG8 2
+#define SGD_TEXTURE_FORMAT_RGBA8 3
+#define SGD_TEXTURE_FORMAT_SRGBA8 4
+#define SGD_TEXTURE_FORMAT_RGBA16F 5
+#define SGD_TEXTURE_FORMAT_DEPTH32F 6
 //! @endcond
 
 //! @cond Texture flag constants
@@ -274,13 +319,13 @@ SGD_API SGD_Texture SGD_DECL sgd_LoadTexture(SGD_String path, int format, int fl
 //!
 
 //! Create a new PBR material.
-SGD_API SGD_Material SGD_DECL sgd_CreatePBRMaterial(float red, float green, float blue, float alpha);
+SGD_API SGD_Material SGD_DECL sgd_CreatePBRMaterial();
 
 //! Load a new PBR material.
 SGD_API SGD_Material SGD_DECL sgd_LoadPBRMaterial(SGD_String path);
 
 //! Create a new prelit matterial.
-SGD_API SGD_Material SGD_DECL sgd_CreatePrelitMaterial(float red, float green, float blue, float alpha);
+SGD_API SGD_Material SGD_DECL sgd_CreatePrelitMaterial();
 
 //! Load a new prelit material.
 SGD_API SGD_Material SGD_DECL sgd_LoadPrelitMaterial(SGD_String path);
@@ -389,6 +434,64 @@ SGD_API void SGD_DECL sgd_TransformMeshTexCoords(SGD_Mesh mesh, float scaleX, fl
 //! Flip mesh.
 SGD_API void SGD_DECL sgd_FlipMesh(SGD_Mesh mesh);
 
+//! @}
+
+//! @name 2D Overlay
+//! @{
+
+//! Load a new font
+SGD_API SGD_Font SGD_DECL sgd_Load2DFont(SGD_String path, float height);
+
+//! Get font height
+SGD_API float SGD_DECL sgd_Get2DFontHeight(SGD_Font font);
+
+//! Set current fill color for drawing shapes.
+SGD_API void SGD_DECL sgd_Set2DFillColor(float red, float green, float blue, float alpha);
+
+//! Set current fill material for drawing shapes.
+SGD_API void SGD_DECL sgd_Set2DFillMaterial(SGD_Material material);
+
+//! SetCurrent file enabled flag for drawing shapes.
+SGD_API void SGD_DECL sgd_Set2DFillEnabled(SGD_Bool enabled);
+
+//! Set current outline color for drawing shapes.
+SGD_API void SGD_DECL sgd_Set2DOutlineColor(float red, float green, float blue, float alpha);
+
+//! Set current outline width, defaults to 3.
+SGD_API void SGD_DECL sgd_Set2DOutlineWidth(float width);
+
+//! SetCurrent outline enabled flag for drawing shapes.
+SGD_API void SGD_DECL sgd_Set2DOutlineEnabled(SGD_Bool enabled);
+
+//! Set current line width, defaults to 3.
+SGD_API void SGD_DECL sgd_Set2DLineWidth(float width);
+
+//! Set current point size, defaults to 3.
+SGD_API void SGD_DECL sgd_Set2DPointSize(float size);
+
+//! Set current font.
+SGD_API void SGD_DECL sgd_Set2DFont(SGD_Font font);
+
+//! Set current text color.
+SGD_API void SGD_DECL sgd_Set2DTextColor(float red, float green, float blue, float alpha);
+
+//! Clear the current 2d overlay.
+SGD_API void SGD_DECL sgd_Clear2D();
+
+//! Draw point using current fill and outline colors.
+SGD_API void SGD_DECL sgd_Draw2DPoint(float x0, float y0);
+
+//! Draw line using current fill and outline colors.
+SGD_API void SGD_DECL sgd_Draw2DLine(float x0, float y0, float x1, float y1);
+
+//! Draw rect using current fill and outline colors.
+SGD_API void SGD_DECL sgd_Draw2DRect(float minX, float minY, float maxX, float maxY);
+
+//! Draw oval using current fill and outline colors.
+SGD_API void SGD_DECL sgd_Draw2DOval(float minX, float minY, float maxX, float maxY);
+
+//! Draw text using current text color.
+SGD_API void SGD_DECL sgd_Draw2DText(SGD_String text, float x,float y);
 
 //! @}
 
@@ -420,7 +523,7 @@ SGD_API void SGD_DECL sgd_RenderScene();
 SGD_API void SGD_DECL sgd_Present();
 
 //! Return frames per second.
-SGD_API int SGD_DECL sgd_FPS();
+SGD_API float SGD_DECL sgd_FPS();
 
 //! @}
 
@@ -440,46 +543,55 @@ SGD_API void SGD_DECL sgd_SetEntityParent(SGD_Entity entity, SGD_Entity parent);
 SGD_API SGD_Entity SGD_DECL sgd_EntityParent(SGD_Entity entity);
 
 //! Set entity position in world space.
-SGD_API void SGD_DECL sgd_SetEntityPosition(SGD_Entity entity, float tx, float ty, float tz);
+SGD_API void SGD_DECL sgd_SetEntityPosition(SGD_Entity entity, SGD_Real tx, SGD_Real ty, SGD_Real tz);
 
 //! Set entity rotation in world space.
-SGD_API void SGD_DECL sgd_SetEntityRotation(SGD_Entity entity, float rx, float ry, float rz);
+SGD_API void SGD_DECL sgd_SetEntityRotation(SGD_Entity entity, SGD_Real rx, SGD_Real ry, SGD_Real rz);
 
 //! Set entity scale in world space.
-SGD_API void SGD_DECL sgd_SetEntityScale(SGD_Entity entity, float sx, float sy, float sz);
+SGD_API void SGD_DECL sgd_SetEntityScale(SGD_Entity entity, SGD_Real sx, SGD_Real sy, SGD_Real sz);
 
 //! Translate entity in world space.
-SGD_API void SGD_DECL sgd_TranslateEntity(SGD_Entity entity, float tx, float ty, float tz);
+SGD_API void SGD_DECL sgd_TranslateEntity(SGD_Entity entity, SGD_Real tx, SGD_Real ty, SGD_Real tz);
 
 //! Rotate entity in world space.
-SGD_API void SGD_DECL sgd_RotateEntity(SGD_Entity entity, float rx, float ry, float rz);
+SGD_API void SGD_DECL sgd_RotateEntity(SGD_Entity entity, SGD_Real rx, SGD_Real ry, SGD_Real rz);
 
 //! Scale entity in world space.
-SGD_API void SGD_DECL sgd_ScaleEntity(SGD_Entity entity, float sx, float sy, float sz);
+SGD_API void SGD_DECL sgd_ScaleEntity(SGD_Entity entity, SGD_Real sx, SGD_Real sy, SGD_Real sz);
 
 //! Move an entity relative to it's current orientation.
-SGD_API void SGD_DECL sgd_MoveEntity(SGD_Entity entity, float tx, float ty, float tz);
+SGD_API void SGD_DECL sgd_MoveEntity(SGD_Entity entity, SGD_Real tx, SGD_Real ty, SGD_Real tz);
 
 //! Turn an entity relative to it's current orientation.
-SGD_API void SGD_DECL sgd_TurnEntity(SGD_Entity entity, float rx, float ry, float rz);
+SGD_API void SGD_DECL sgd_TurnEntity(SGD_Entity entity, SGD_Real rx, SGD_Real ry, SGD_Real rz);
 
 //! Get the X component of an entity's position in world space.
-SGD_API float SGD_DECL sgd_EntityX(SGD_Entity entity);
+SGD_API SGD_Real SGD_DECL sgd_EntityX(SGD_Entity entity);
 
 //! Get the Y component of an entity's position in world space.
-SGD_API float SGD_DECL sgd_EntityY(SGD_Entity entity);
+SGD_API SGD_Real SGD_DECL sgd_EntityY(SGD_Entity entity);
 
 //! Get the Z component of an entity's position in world space.
-SGD_API float SGD_DECL sgd_EntityZ(SGD_Entity entity);
+SGD_API SGD_Real SGD_DECL sgd_EntityZ(SGD_Entity entity);
 
 //! Get the X rotation component (ie: 'pitch') of an entity's orientation in world space.
-SGD_API float SGD_DECL sgd_EntityRX(SGD_Entity entity);
+SGD_API SGD_Real SGD_DECL sgd_EntityRX(SGD_Entity entity);
 
 //! Get the Y rotation component (ie: 'yaw') of an entity's orientation in world space.
-SGD_API float SGD_DECL sgd_EntityRY(SGD_Entity entity);
+SGD_API SGD_Real SGD_DECL sgd_EntityRY(SGD_Entity entity);
 
 //! Get the Z rotation component (ie: 'roll') of an entity's orientation in world space.
-SGD_API float SGD_DECL sgd_EntityRZ(SGD_Entity entity);
+SGD_API SGD_Real SGD_DECL sgd_EntityRZ(SGD_Entity entity);
+
+//! Get the X rotation component (ie: 'pitch') of an entity's orientation in world space.
+SGD_API SGD_Real SGD_DECL sgd_EntitySX(SGD_Entity entity);
+
+//! Get the Y rotation component (ie: 'yaw') of an entity's orientation in world space.
+SGD_API SGD_Real SGD_DECL sgd_EntitySY(SGD_Entity entity);
+
+//! Get the Z rotation component (ie: 'roll') of an entity's orientation in world space.
+SGD_API SGD_Real SGD_DECL sgd_EntitySZ(SGD_Entity entity);
 
 //! @}
 
@@ -559,6 +671,9 @@ SGD_API SGD_Model SGD_DECL sgd_CreateModel();
 //! Set model mesh.
 SGD_API void SGD_DECL sgd_SetModelMesh(SGD_Model model, SGD_Mesh mesh);
 
+//! Get model mesh.
+SGD_API SGD_Mesh SGD_DECL sgd_ModelMesh(SGD_Model model);
+
 //! Set model color.
 SGD_API void SGD_DECL sgd_SetModelColor(SGD_Model model, float red, float green, float blue, float alpha);
 
@@ -609,7 +724,18 @@ SGD_API void SGD_DECL sgd_SetSpriteRect(SGD_Sprite sprite, float minX, float min
 
 //! @}
 
-//! @name Skybox
+//! @name ImGui
 //! @{
+
+#if SGD_DYNAMIC
+//! @cond Private internal ImGui interface used by sgd/imgui_impl_sgd.h glue
+SGD_API SGD_Bool SGD_DECL sgd_ImGui_ImplSGD_Init(void* imguiProcs);
+SGD_API void SGD_DECL sgd_ImGui_ImplSGD_Shutdown();
+SGD_API void SGD_DECL sgd_ImGui_ImplSGD_NewFrame();
+SGD_API void SGD_DECL sgd_ImGui_ImplSGD_RenderDrawData(void* imguiDrawData);
+//! @endcond
+#endif
+
+//! @}
 
 #endif
