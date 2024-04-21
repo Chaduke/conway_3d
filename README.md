@@ -1,6 +1,8 @@
-This is a Cellular Automata explorer in 3D
-Think Conway's Game of Life but with ability 
+This is a Cellular Automata explorer in 3D \
+
+Think Conway's Game of Life but with ability\
 to try new algorithms on both 2D and 3D grids
+
 Made with LibSGD - https://patreon.com/libsgd
 
 Instructions: 
