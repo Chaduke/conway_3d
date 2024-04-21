@@ -1,5 +1,7 @@
-This is Conway's Game of Life in 3D.
-Made using LibSGD - https://patreon.com/libsgd
+This is a Cellular Automata explorer in 3D
+Think Conway's Game of Life but with ability 
+to try new algorithms on both 2D and 3D grids
+Made with LibSGD - https://patreon.com/libsgd
 
 Instructions: 
 1) Install Visual Studio 2022 (C++ Language)
@@ -10,28 +12,7 @@ Instructions:
 
 Video here - https://youtu.be/Ux4fZRMXW0E?si=1gHzymVNplpfYIfO
 
-Help Menu
----------
+Video to be updated soon to reflect the changes
 
-F1 - Toggle Help Menu \
-
-0-9 - Load a view state \
-Ctrl + 0-9 - Save a view state \
-Ctrl + Numpad 0-9 - Save a Grid State \
-Numpad 0-9 - Load a Grid State \
-
-SPACE - Pause / Unpause \
-N - Next Frame (while paused) \
-C - Clear all Cells \
-R - Reset / Randomize Cells \
-F - Toggle Mouselook / Gamepad \
-WASD - Move Forward Left Back Right \
-QE - Move Up and Down \
-Left SHIFT - Move at Double Speed \
-Arrow Keys - Turn Camera Up Down Left Right \ 
-G - Toggle Edit Mode \
-In Edit Mode : \
-WASDQE - moves one cell at a time \
-Enter toggles cells on/off \
-T - Toggle 2D / 3D mode 
-
+TODO : Add ability to change rulesets
+TODO : Add ability to load and save rulesets
