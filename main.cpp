@@ -19,6 +19,7 @@
 #include <iostream>
 #include <string>
 #include "globals.h"
+// #include "rules.h"
 #include "grid2D.h"
 #include "grid3D.h"
 #include "states.h"

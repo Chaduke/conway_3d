@@ -146,6 +146,7 @@
     <ClInclude Include="grid3D.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="init.h" />
+    <ClInclude Include="rules.h" />
     <ClInclude Include="states.h" />
   </ItemGroup>
   <ItemGroup>

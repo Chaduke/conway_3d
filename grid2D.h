@@ -77,7 +77,6 @@ static void updateNextGrid() {
 			if (col < gridCols - 1 && row < gridRows - 1) {
 				if (grid[col + 1][row + 1]) n++;
 			}
-			// update nextgrid
 			// rule 1 underpopulation death
 			if (grid[col][row] && n < 2) nextgrid[col][row] = SGD_FALSE;
 			// rule 2 survival 

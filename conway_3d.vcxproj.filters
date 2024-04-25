@@ -56,6 +56,9 @@
     <ClInclude Include="states.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="rules.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
