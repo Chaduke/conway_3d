@@ -11,7 +11,7 @@ bool show_help = true; // imgui help window
 bool show_stats = true; // imgui stats window
 bool show_rules = true; // imgui rules window
 bool loop = true; // flag to stay in main loop or exit
-bool mode2D = false; // decide early on 2D or full 3D mode
+bool mode2D = true; // decide early on 2D or full 3D mode
 
 // created assets
 SGD_Model backgroundModel;
@@ -34,9 +34,9 @@ bool nextgrid[gridCols][gridRows]; // store the grid for the following frame
 SGD_Model cells[gridCols][gridRows]; // store the cell models 
 
 // for 3D mode
-constexpr int gridCols3 = 35; // x value
-constexpr int gridRows3 = 35; // y value
-constexpr int gridLayers3 = 35; // z value
+constexpr int gridCols3 = 20; // x value
+constexpr int gridRows3 = 20; // y value
+constexpr int gridLayers3 = 20; // z value
 constexpr float cellSize3 = 1;
 
 // the main camera

@@ -12,7 +12,7 @@ void createBackgroundModel() {
 		by = floor((gridLayers3 / 2) + (gridLayers3 / 15));
 	}
 	SGD_Mesh backgroundMesh = sgd_CreateBoxMesh(-bx, -3, -by, bx, -2, by, backgroundMaterial);
-	sgd_TFormMeshTexCoords(backgroundMesh, 16, 16, 0, 0);
+	sgd_TFormMeshTexCoords(backgroundMesh, 4, 4, 0, 0);
 	backgroundModel = sgd_CreateModel(backgroundMesh);	
 	if (!mode2D) sgd_SetEntityPosition(backgroundModel, 0, -gridRows3 / 2, 0);
 }
@@ -50,24 +50,8 @@ void init() {
 	// environment light
 	sgd_SetAmbientLightColor(0.52, 0.1, 0.49, 0.05);
 	SGD_Light dirLight = sgd_CreateDirectionalLight();
-
-	// middle light
-	SGD_Light midLight = sgd_CreatePointLight();	
-	if (mode2D) {
-		sgd_MoveEntity(midLight, 0, 50, 0);
-		sgd_SetLightRange(midLight, 100);
-	}
-	else {
-		sgd_MoveEntity(midLight, 0, 5, 0);
-		sgd_SetLightRange(midLight, 25);
-	}
-	sgd_SetLightShadowsEnabled(midLight, SGD_TRUE);
-
-	// camera light
-	SGD_Light camLight = sgd_CreatePointLight();
-	sgd_SetLightRange(camLight, 1.5);
-	sgd_SetEntityParent(camLight, cam);
-	sgd_MoveEntity(camLight, -0.5, 0, 0);
+	sgd_SetLightShadowsEnabled(dirLight, true);
+	sgd_TurnEntity(dirLight, -50, -20, 0);
 
 	// create the cell mesh	
 	cellMesh = sgd_CreateSphereMesh(0.5, 16, 16, cellMaterial);
