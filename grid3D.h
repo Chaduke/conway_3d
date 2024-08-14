@@ -1,6 +1,4 @@
-#pragma once
-
-
+#pragma 
 
 SGD_Bool grid3[gridCols3][gridRows3][gridLayers3]; // store the main displayed grid
 SGD_Bool nextgrid3[gridCols3][gridRows3][gridLayers3]; // store the grid for the following frame
@@ -34,16 +32,13 @@ void createGridModels3D(SGD_Mesh mesh) {
 	for (int layer = 0; layer < gridLayers3; layer++) {
 		for (int row = 0; row < gridRows3; row++) {
 			for (int col = 0; col < gridCols3; col++) {
-				cells3[col][row][layer] = sgd_CreateModel();
-				sgd_SetModelMesh(cells3[col][row][layer], mesh);
+				cells3[col][row][layer] = sgd_CreateModel(mesh);				
 			}
 		}
 	}
 	randomizeGrid3D();
 	arrangeGrid3D();	
 }
-
-
 
 static void clearGrid3D() {
 	for (int layer = 0; layer < gridLayers3; layer++) {

@@ -46,5 +46,5 @@ SGD_Camera cam;
 // we parent the camera to this
 SGD_Model pivot;
 
-float movespeed = 0.3; // camera movement speed
-float turnspeed = 1.0; // camera turn speed
+float movespeed = 0.3f; // camera movement speed
+float turnspeed = 1.0f; // camera turn speed

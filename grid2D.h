@@ -22,8 +22,7 @@ static void arrangeGrid() {
 void createGridModels2D(SGD_Mesh mesh) {		
 	for (int row = 0; row < gridRows; row++) {
 		for (int col = 0; col < gridCols; col++) {
-			cells[col][row] = sgd_CreateModel();
-			sgd_SetModelMesh(cells[col][row], mesh);
+			cells[col][row] = sgd_CreateModel(mesh);			
 		}
 	}
 	randomizeGrid();

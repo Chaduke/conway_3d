@@ -7,7 +7,7 @@
 // materials from ambientcg.com
 // if you have questions, comments, requests, or do anything cool // 
 // with this let me know, comment on youtube or the blitzworld forums, email me etc..
-
+// Blitz World forums - https://skirmish-dev.net/forum/
 // thanks for checking this out
 
 // TODO : add ImGUI
@@ -34,9 +34,7 @@ int main(int, char**) {
 	sgd_Init();
 	// sgd_CreateWindow(1280, 720, "Conway's Game of Life in 3D", 0); // 16 : 9 Window
 	// sgd_CreateWindow(3840,2160, "", 1); // UHD Fullscreen
-	sgd_CreateWindow(1920, 1080, "", 256); // HD Fullscreen
-	sgd_SetWebGPUBackend("D3D12");
-	sgd_CreateScene();
+	sgd_CreateWindow(1920, 1080, "", 256); // HD Fullscreen	
 	// imgui init
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -115,10 +113,10 @@ int main(int, char**) {
 				ImGui::Text("THEN After Dead");
 			}
 			if (ImGui::CollapsingHeader("Info and Stats")) {
-				ImGui::Text("Pivot Position X %.2f Y %.2f Z %.2f", sgd_EntityX(pivot), sgd_EntityY(pivot), sgd_EntityZ(pivot));
-				ImGui::Text("Pivot Rotation X %.2f Y %.2f Z %.2f", sgd_EntityRX(pivot), sgd_EntityRY(pivot), sgd_EntityRZ(pivot));
-				ImGui::Text("Camera Position X %.2f Y %.2f Z %.2f", sgd_EntityX(cam), sgd_EntityY(cam), sgd_EntityZ(cam));
-				ImGui::Text("Camera Rotation X %.2f Y %.2f Z %.2f", sgd_EntityRX(cam), sgd_EntityRY(cam), sgd_EntityRZ(cam));
+				ImGui::Text("Pivot Position X %.2f Y %.2f Z %.2f", sgd_GetEntityX(pivot), sgd_GetEntityY(pivot), sgd_GetEntityZ(pivot));
+				ImGui::Text("Pivot Rotation X %.2f Y %.2f Z %.2f", sgd_GetEntityRX(pivot), sgd_GetEntityRY(pivot), sgd_GetEntityRZ(pivot));
+				ImGui::Text("Camera Position X %.2f Y %.2f Z %.2f", sgd_GetEntityX(cam), sgd_GetEntityY(cam), sgd_GetEntityZ(cam));
+				ImGui::Text("Camera Rotation X %.2f Y %.2f Z %.2f", sgd_GetEntityRX(cam), sgd_GetEntityRY(cam), sgd_GetEntityRZ(cam));
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			}
 			
